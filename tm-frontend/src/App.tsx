@@ -49,9 +49,16 @@ const App = () => {
 
   // Effects
   useEffect(() => {
-    checkHealth();
     fetchTasks();
   }, []);
+
+  // Check server health every 10 seconds once server is down
+  useEffect(() => {
+    !loading.isServerUp &&
+      setTimeout(() => {
+        checkHealth();
+      }, 10000);
+  }, [loading.isServerUp]);
 
   // Functions
   const onClickOutside = () => {
@@ -83,6 +90,7 @@ const App = () => {
         ...loading,
         isServerUp: true,
       });
+      window.location.reload();
     } else {
       toast.error("Server is yet to start, wait a min");
     }
@@ -94,6 +102,10 @@ const App = () => {
         `${import.meta.env.VITE_BACKEND_API_URL}`
       );
       setTasks(response.data);
+      setLoading({
+        ...loading,
+        isServerUp: true,
+      })
     } catch (error: any) {
       toast.error(error.response.data.error);
     }
@@ -261,7 +273,7 @@ const App = () => {
           Add Task
         </button>
       </div>
-        
+
       {/* Server Health */}
       {!loading.isServerUp ? (
         <div className=" mt-16 bg-opacity-50 flex flex-col gap-5 items-center justify-center">
