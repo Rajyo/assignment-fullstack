@@ -104,7 +104,7 @@ const App = () => {
       setLoading({
         ...loading,
         isServerUp: true,
-      })
+      });
     } catch (error: any) {
       toast.error(error.response.data.error);
     }
@@ -206,13 +206,6 @@ const App = () => {
       toast.success("Task Title updated successfully");
     } catch (error: any) {
       toast.error(error.response.data.error);
-    } finally {
-      setLoading({
-        ...loading,
-        editTitle: false,
-        updateTitle: false,
-      });
-      setUpdateTask({ _id: "", title: "", newTitle: "", status: "pending" });
     }
   };
 
@@ -419,6 +412,17 @@ const App = () => {
                   updateTask.newTitle!,
                   updateTask.status
                 );
+                setLoading({
+                  ...loading,
+                  editTitle: false,
+                  updateTitle: false,
+                });
+                setUpdateTask({
+                  _id: "",
+                  title: "",
+                  newTitle: "",
+                  status: "pending",
+                });
               }}
               disabled={
                 loading.updateTitle || updateTask.newTitle?.trim() === ""
