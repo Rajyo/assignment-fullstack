@@ -103,8 +103,9 @@ const App = () => {
       setTasks(response.data);
       setLoading({
         ...loading,
+        editTitle: false,
         isServerUp: true,
-      });
+      })
     } catch (error: any) {
       toast.error(error.response.data.error);
     }
@@ -166,7 +167,6 @@ const App = () => {
         status: updatedStatus,
       });
       fetchTasks();
-      setNewTask({ title: "", status: "pending" });
       toast.success("Task status updated successfully");
     } catch (error: any) {
       toast.error(error.response.data.error);
@@ -202,10 +202,16 @@ const App = () => {
         status: status,
       });
       fetchTasks();
-      setNewTask({ title: "", status: "pending" });
       toast.success("Task Title updated successfully");
     } catch (error: any) {
       toast.error(error.response.data.error);
+    } finally {
+      setLoading({
+        ...loading,
+        editTitle: false,
+        updateTitle: false,
+      });
+      setUpdateTask({ _id: "", title: "", newTitle: "", status: "pending" });
     }
   };
 
@@ -398,7 +404,7 @@ const App = () => {
               onChange={(e) =>
                 setUpdateTask({ ...updateTask, newTitle: e.target.value })
               }
-              placeholder="Task title"
+              placeholder={updateTask.title}
               className="w-full mt-5 mb-2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
@@ -412,17 +418,6 @@ const App = () => {
                   updateTask.newTitle!,
                   updateTask.status
                 );
-                setLoading({
-                  ...loading,
-                  editTitle: false,
-                  updateTitle: false,
-                });
-                setUpdateTask({
-                  _id: "",
-                  title: "",
-                  newTitle: "",
-                  status: "pending",
-                });
               }}
               disabled={
                 loading.updateTitle || updateTask.newTitle?.trim() === ""

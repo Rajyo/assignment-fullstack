@@ -8,7 +8,7 @@ const TaskSchema = z.object({
     .min(1, "Title must be at least 1 characters long")
     .max(20, "Title must not be more than 20 characters long")
     .refine((value) => value.trim().length > 1, {
-      message: "Title should not be empty",
+      message: "Title must be at least 1 characters long",
     }),
   status: z.enum(["pending", "completed"]).default("pending"),
 });
