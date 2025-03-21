@@ -54,7 +54,7 @@ const App = () => {
 
   // Check server health every 10 seconds once server is down
   useEffect(() => {
-    !loading.isServerUp &&
+    loading.isServerUp === false &&
       setTimeout(() => {
         checkHealth();
       }, 10000);
@@ -90,7 +90,6 @@ const App = () => {
         ...loading,
         isServerUp: true,
       });
-      window.location.reload();
     } else {
       toast.error("Server is yet to start, wait a min");
     }
